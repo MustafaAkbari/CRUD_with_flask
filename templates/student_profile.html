@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student profile</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<!-- creating flashed message -->
+<br>
+<div class="container">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert-container">
+      {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Hey,{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+</div>
+<!-- validate if student_name has a value then show the profile if not then show the form -->
+{% if student_name %}
+    <div class="container">
+        <br><br>
+        <h1>This profile belong to: {{student_name|title}}</h1>
+    </div>
+{% else %}
+    <div class="container">
+        <br><br>
+        <h1>Enter the name of student you want to see his/her profile</h1>
+        <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.student_name.label(class="form-label") }} {{ form.student_name(class="form-control") }}
+        <br>
+        {{ form.submit(class="btn btn-outline-primary") }}
+        </form>
+    </div>
+{% endif %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Student</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<!-- creating flashed message -->
+<br>
+      <br><br><br>
+<center><h1>Welcome to Update page</h1></center>
+      <br><br>
+      <div class="container">
+      <div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <form method="POST" action="/update/{{student_to_update.s_id}}">
+        {{ form.hidden_tag() }}
+        {{ form.student_name.label(class="form-label") }} {{ form.student_name(class="form-control", value=student_to_update.s_name)}}
+        {{ form.student_email.label(class="form-label") }} {{ form.student_email(class="form-control", value=student_to_update.s_email)}}
+          {{ form.student_address.label(class="form-label") }} {{ form.student_address(class="form-control", value=student_to_update.s_address)}}
+          {{ form.student_course.label(class="form-label") }} {{ form.student_course(class="form-control", value=student_to_update.s_course)}}
+        <br>
+        {{ form.submit(class="btn btn-outline-primary") }}
+        <a class="btn btn-outline-danger" href="{{url_for('delete_student', id=student_to_update.s_id)}}">Delete</a>
+      </form>
+      </div>
+      </div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<br><br>
+<div class="container">
+<h1>Delete Student</h1>
+<p>Are you sure you want to delete {{ student_to_delete.s_name }} with the ID {{ student_to_delete.s_id }}?</p>
+<form action="{{ url_for('delete_student', id=student_to_delete.s_id) }}" method="post">
+    {{ form.hidden_tag() }}
+    {{ form.submit(class="btn btn-outline-danger") }}
+    <a href="{{url_for('update_student', id=student_to_delete.s_id)}}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+</div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Student</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<!-- creating flashed message -->
+<br>
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    <div class="alert-container">
+      {% for category, message in messages %}
+      {% if category == "danger" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% else %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+</div>
+<br><br>
+<div class="container">
+  {% if name %}
+      <h1>Here is the list of students in table:</h1>
+            <br><br><br>
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Student Id</th>
+      <th scope="col">Student Name</th>
+      <th scope="col">Student Email</th>
+      <th scope="col">Student Address</th>
+      <th scope="col">Student Course</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for our_student in our_students %}
+    <tr class="table-info">
+      <td>{{our_student.s_id}}</td>
+      <td><a href="{{url_for('update_student', id=our_student.s_id)}}">{{our_student.s_name}}</a> </td>
+      <td>{{our_student.s_email}}</td>
+      <td>{{our_student.s_address}}</td>
+      <td>{{our_student.s_course}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  {% else %}
+      <h1>Welcome to Registration page</h1>
+      <div class="shadow-lg p-3 mb-5 bg-white rounded">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.student_name.label(class="form-label") }} {{ form.student_name(class="form-control") }}
+        {{ form.student_email.label(class="form-label") }} {{ form.student_email(class="form-control") }}
+        {{ form.student_address.label(class="form-label") }} {{ form.student_address(class="form-control") }}
+        {{ form.student_course.label(class="form-label") }} {{ form.student_course(class="form-control") }}
+        <br>
+        {{ form.submit(class="btn btn-outline-primary") }}
+      </form>
+      </div>
+  {% endif %}
+</div>
+{% endblock %}
+</body>
+</html>

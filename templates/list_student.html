@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Student</title>
+</head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<br><br>
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    <div class="alert-container">
+      {% for category, message in messages %}
+      {% if category == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% elif category == "danger" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% else %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+</div>
+<center><h1>List of students in table</h1></center>
+<center><h4>To update a record in table, click on the name of any student you want to update ro delete</h4></center>
+          <br><br><br>
+<div  class="shadow-lg p-3 mb-5 bg-white rounded">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Student Id</th>
+      <th scope="col">Student Name</th>
+      <th scope="col">Student Email</th>
+      <th scope="col">Student Address</th>
+      <th scope="col">Student Course</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in student_list %}
+    <tr class="table-info">
+      <td>{{student.s_id}}</td>
+      <td><a href="{{url_for('update_student', id=student.s_id)}}">{{student.s_name}}</a> </td>
+      <td>{{student.s_email}}</td>
+      <td>{{student.s_address}}</td>
+      <td>{{student.s_course}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
+</body>
+</html>
