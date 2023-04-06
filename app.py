@@ -8,6 +8,7 @@ from datetime import datetime
 import sqlalchemy.exc
 import pymysql.err
 from flask_migrate import Migrate
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # creating an instance of Flask (creating our app)
 app = Flask(__name__)
@@ -32,6 +33,20 @@ class Students(db.Model):
     date_added = db.Column(db.DateTime(), default=datetime.utcnow())
     s_address = db.Column(db.String(128), nullable=False)
     s_course = db.Column(db.String(30), nullable=False)
+       password_hash = db.Column(db.String(128), nullable=False)
+
+    # define a getter decorator to show an error message for AttributeError
+    @property
+    def password(self):
+        raise AttributeError("password is not a readable attribute!")
+
+    # define setter decorator to generate a hash password and check or verify hashed_password
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return f"Student Id: {self.s_id}" \
@@ -60,6 +75,12 @@ class RegisterStudents(FlaskForm):
                                                  ("Javascript", "Javascript"),
                                                  ("Python-flask", "Python-flask")],
                                                 key=lambda x: x[0]))
+    student_password = PasswordField("Student Password: ", validators=[DataRequired(),
+                                                                       EqualTo("confirm_student_password",
+                                                                               "password must match!")],
+                                     render_kw={"placeholder": "Password"})
+    confirm_student_password = PasswordField("Confirm Password: ", validators=[DataRequired()],
+                                             render_kw={"placeholder": "Confirm password"})
     submit = SubmitField("Register")
 
 
@@ -111,10 +132,12 @@ def add_students():
     if form.validate_on_submit():
         student = Students.query.filter_by(s_email=form.student_email.data).first()
         if student is None:
+            hashed_password = generate_password_hash(form.student_password.data)
             new_student = Students(s_name=form.student_name.data.title(),
                                    s_email=form.student_email.data.capitalize(),
                                    s_address=form.student_address.data.title(),
-                                   s_course=form.student_course.data.title())
+                                   s_course=form.student_course.data.title(),
+                                   password_hash=hashed_password)
             try:
 
                 db.session.add(new_student)
@@ -124,6 +147,8 @@ def add_students():
                 form.student_email.data = ""
                 form.student_address.data = ""
                 form.student_course.data = ""
+                form.student_password.data = ""
+                form.confirm_student_password.data = ""
                 flash(f"Student named {name} added to the table.")
             except (sqlalchemy.exc.IntegrityError, pymysql.err.IntegrityError):
                 db.session.rollback()
